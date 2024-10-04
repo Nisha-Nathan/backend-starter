@@ -210,6 +210,43 @@ class Routes {
     const item = await Reaction.getReactionCount(itemOid);
     return { itemId: id, ReactionCount: item };
   }
+
+  // routes for remaining concepts(still being reviewed and redesigned)
+  @Router.post("/notifications")
+  async createNotification(session: SessionDoc, time: number, event: string) {
+    // depends on sessioning and/or posting
+    // creates a notification for an event eg posting
+  }
+
+  @Router.get("/notifications/pending")
+  async getPendingNotifications(session: SessionDoc) {
+    // depends on sessioning
+  }
+
+  @Router.get("/notifications/delivered")
+  async getDeliveredNotifications(session: SessionDoc) {
+    // depends on sessioning
+  }
+
+  @Router.delete("/notifications/pending")
+  async removePendingNotifications(session: SessionDoc) {
+    // depends on sessioning
+  }
+
+  @Router.post("/moderation/flag")
+  async flagItem(itemId: string, reason: string) {
+    // flag items internally
+  }
+
+  @Router.get("/moderation/pending")
+  async getPendingReviewItems() {}
+
+  @Router.post("/moderation/approve")
+  async approveItem(itemId: string) {
+    // flag items internally
+  }
+
+
 }
 
 /** The web app. */
