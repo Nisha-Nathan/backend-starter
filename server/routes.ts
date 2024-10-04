@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Friending, Posting, Sessioning } from "./app";
+import { Authing, Friending, Posting, Sessioning, Reaction, Feed } from "./app";
 import { PostOptions } from "./concepts/posting";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -151,6 +151,64 @@ class Routes {
     const user = Sessioning.getUser(session);
     const fromOid = (await Authing.getUserByUsername(from))._id;
     return await Friending.rejectRequest(fromOid, user);
+  }
+
+  @Router.post("/feed")
+  async createFeed(name: string) {
+    const feed = await Feed.createFeed(name);
+    return { msg: feed.msg, feed: feed };
+  }
+
+  @Router.get("/feeds")
+  async getFeeds() {
+    const feeds = await Feed.getFeeds();
+    return { posts: feeds };
+  }
+
+  @Router.post("/feed/:id/post")
+  async addPostToFeed(id: string, postId: string) {
+    const feedOid = new ObjectId(id);
+    const postOid = new ObjectId(postId);
+    const msg = await Feed.addPostToFeed(feedOid, postOid);
+    return { msg: msg };
+  }
+
+  @Router.patch("/feed/:id/post/remove")
+  async removePostFromFeed(id: string, postId: string) {
+    const feedOid = new ObjectId(id);
+    const postOid = new ObjectId(postId);
+    const response = await Feed.removePostFromFeed(feedOid, postOid);
+    return { msg: response.msg, feed: response.feed };
+  }
+
+  @Router.get("/feed/:id/posts")
+  async getFeedPosts(id: string) {
+    const feedOid = new ObjectId(id);
+    const feed = await Feed.getFeedPosts(feedOid);
+    return { name: feed.name, posts: feed.posts };
+  }
+
+  @Router.post("/reactions")
+  async addReaction(session: SessionDoc, itemId: string, reaction: string) {
+    const user = Sessioning.getUser(session);
+    const itemOid = new ObjectId(itemId);
+    const addedReaction = await Reaction.addReaction(user, itemOid, reaction);
+    return { msg: addedReaction.msg, reaction: addedReaction.reaction };
+  }
+
+  @Router.delete("/reactions")
+  async removeReaction(session: SessionDoc, itemId: string, reaction: string) {
+    const user = Sessioning.getUser(session);
+    const itemOid = new ObjectId(itemId);
+    const msg = await Reaction.removeReaction(user, itemOid);
+    return { msg };
+  }
+
+  @Router.get("/reactions/:id")
+  async getPostReactions(id: string) {
+    const itemOid = new ObjectId(id);
+    const item = await Reaction.getReactionCount(itemOid);
+    return { itemId: id, ReactionCount: item };
   }
 }
 

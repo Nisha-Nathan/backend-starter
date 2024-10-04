@@ -80,6 +80,62 @@ const operations: Operation[] = [
     method: "DELETE",
     fields: { id: "input" },
   },
+
+  {
+    name: "Create Feed",
+    endpoint: "/api/feed",
+    method: "POST",
+    fields: { name: "input" },
+  },
+
+  {
+    name: "Get Feeds",
+    endpoint: "/api/feeds",
+    method: "GET",
+    fields: {},
+  },
+
+  {
+    name: "Add post to feed",
+    endpoint: "api/feed/:id/post",
+    method: "POST",
+    fields: { id: "input", postId: "input" },
+  },
+
+  {
+    name: "Remove post from feed",
+    endpoint: "api/feed/:id/post/remove",
+    method: "PATCH",
+    fields: { id: "input", postId: "input" },
+  },
+
+  {
+    name: "Get Feeds Posts",
+    endpoint: "api/feed/:id/posts",
+    method: "GET",
+    fields: { id: "input" },
+  },
+
+  {
+    name: "React to Post(you can only react by texting 'Hug or Smile or Cheer')",
+    endpoint: "api/reactions",
+    method: "POST",
+    fields: { itemId: "input", reaction: "input" },
+  },
+
+  {
+    name: "Remove reaction to Post(you can only react by texting 'Hug or Smile or Cheer')",
+    endpoint: "api/reactions",
+    method: "DELETE",
+    fields: { itemId: "input", reaction: "input" },
+  },
+
+  {
+    name: "Get Post Reactions",
+    endpoint: "api/reactions/:id",
+    method: "GET",
+    fields: { id: "input" },
+  },
   //
   // ...
   //
