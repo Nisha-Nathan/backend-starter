@@ -145,6 +145,20 @@ const operations: Operation[] = [
   },
 
   {
+    name: "Get flagged Items",
+    endpoint: "api/reports",
+    method: "GET",
+    fields: {},
+  },
+
+  {
+    name: "Get reviewed Items",
+    endpoint: "api/reports/reviewed",
+    method: "GET",
+    fields: {},
+  },
+
+  {
     name: "Schedule a notification",
     endpoint: "api/notifications",
     method: "POST",
@@ -160,14 +174,14 @@ const operations: Operation[] = [
 
   {
     name: "Get delivered notifications",
-    endpoint: "api//notifications/delivered",
+    endpoint: "api/notifications/delivered",
     method: "GET",
     fields: {},
   },
 
   {
     name: "Get pending notifications",
-    endpoint: "api//notifications/pending",
+    endpoint: "api/notifications/pending",
     method: "GET",
     fields: {},
   },

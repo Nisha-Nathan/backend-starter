@@ -1,9 +1,15 @@
+/**
+ * This code uses OpenAI's API to generate encouraging and positive notification texts.
+ * API Documentation: https://beta.openai.com/docs/
+ * 
+ * The notification content generated for users is powered by OpenAI's GPT model.
+ * OpenAI, GPT-3, GPT-4, and associated models are trademarks of OpenAI.
+ */
 import { ObjectId } from "mongodb";
-import OpenAI from "openai";
-const openai = new OpenAI();
-
 import DocCollection, { BaseDoc } from "../framework/doc";
 import { NotAllowedError } from "./errors";
+import OpenAI from "openai";
+const openai = new OpenAI();
 
 export interface NotificationDoc extends BaseDoc {
   user: ObjectId;

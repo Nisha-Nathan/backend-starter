@@ -1,7 +1,14 @@
+/**
+ * This code uses OpenAI's API to perform moderation and content generation.
+ * API Documentation: https://beta.openai.com/docs/
+ * 
+ * All moderation checks and content generation actions in this file
+ * are performed using the OpenAI GPT models.
+ * 
+ * OpenAI, GPT-3, GPT-4, and associated models are trademarks of OpenAI.
+ */
 import { ObjectId } from "mongodb";
-
 import DocCollection, { BaseDoc } from "../framework/doc";
-import { NotAllowedError, NotFoundError } from "./errors";
 import OpenAI from "openai";
 const openai = new OpenAI();
 
@@ -94,5 +101,9 @@ export default class ReportingConcept {
 
   async getReviewedItems() {
     return await this.reviewedItems.readMany({});
+  }
+
+  async getFlaggedItems() {
+    return await this.flaggedItems.readMany({});
   }
 }

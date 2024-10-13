@@ -259,6 +259,12 @@ class Routes {
     return { msg: "Item flagged for review", report: result };
   }
 
+  @Router.get("/reports")
+  async getFlaggedItems() {
+    const flaggedItems = await Reporting.getFlaggedItems();
+    return { flaggedItems: flaggedItems };
+  }
+
   @Router.get("/report/reviews")
   async reviewPosts() {
     await Reporting.reviewFlaggedItems();
@@ -271,47 +277,11 @@ class Routes {
     return { msg: "Flagged items reviewed and actions taken accordingly." };
   }
 
-  // @Router.post("/report/:id/review")
-  // async reviewItem(id: string) {
-  //   const itemOid = new ObjectId(id);
-  //   const result = await Reporting.reviewItem(itemOid);
-  //   return { msg: "Item reviewed", outcome: result.outcome };
-  // }
-
-  // // routes for remaining concepts(still being reviewed and redesigned)
-  // @Router.post("/notifications")
-  // async createNotification(session: SessionDoc, time: number, event: string) {
-  //   // depends on sessioning and/or posting
-  //   // creates a notification for an event eg posting
-  // }
-
-  // @Router.get("/notifications/pending")
-  // async getPendingNotifications(session: SessionDoc) {
-  //   // depends on sessioning
-  // }
-
-  // @Router.get("/notifications/delivered")
-  // async getDeliveredNotifications(session: SessionDoc) {
-  //   // depends on sessioning
-  // }
-
-  // @Router.delete("/notifications/pending")
-  // async removePendingNotifications(session: SessionDoc) {
-  //   // depends on sessioning
-  // }
-
-  // @Router.post("/moderation/flag")
-  // async flagItem(itemId: string, reason: string) {
-  //   // flag items internally
-  // }
-
-  // @Router.get("/moderation/pending")
-  // async getPendingReviewItems() {}
-
-  // @Router.post("/moderation/approve")
-  // async approveItem(itemId: string) {
-  //   // flag items internally
-  // }
+  @Router.get("/reports/reviewed")
+  async getReviewedItems() {
+    const reviewedItems = await Reporting.getReviewedItems();
+    return { reviewedItems: reviewedItems };
+  }
 }
 
 /** The web app. */

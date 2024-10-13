@@ -1,5 +1,25 @@
 # 6.1040 Social Media Starter Backend Code
 
+## Citations
+
+#### OpenAI API Usage
+
+This project utilizes the OpenAI API for both moderation and notification text generation.
+
+### Moderation
+
+This project uses OpenAI's moderation capabilities to automatically review flagged content. The flagged items are checked against community guidelines, and a decision is made to either approve or remove the content based on the review outcome.
+
+### Notification Text Generation
+
+This project uses OpenAI to generate encouraging and positive messages for notifications. When scheduling reminders, OpenAI generates custom notification content that is supportive and friendly.
+
+
+#### Attribution
+
+The moderation and text generation features are powered by OpenAI's GPT-4 model. OpenAI, GPT-3, GPT-4, and associated models are trademarks of OpenAI
+
+
 ## Getting Started
 
 If you are using VSCode/VSCodium, install the ESLint and Prettier extensions.
