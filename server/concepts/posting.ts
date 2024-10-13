@@ -61,8 +61,14 @@ export default class PostingConcept {
       throw new PostAuthorNotMatchError(user, _id);
     }
   }
+
+  async getPostContent(_id:ObjectId){
+    const post = await this.posts.readOne({_id});
+    return post?.content;
+  }
 }
 
+ 
 export class PostAuthorNotMatchError extends NotAllowedError {
   constructor(
     public readonly author: ObjectId,

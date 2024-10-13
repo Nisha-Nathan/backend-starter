@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Friending, Posting, Sessioning, Reaction, Feed } from "./app";
+import { Authing, Friending, Posting, Sessioning, Reaction, Feed, Notification, Reporting } from "./app";
 import { PostOptions } from "./concepts/posting";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -211,42 +211,107 @@ class Routes {
     return { itemId: id, ReactionCount: item };
   }
 
-  // routes for remaining concepts(still being reviewed and redesigned)
   @Router.post("/notifications")
-  async createNotification(session: SessionDoc, time: number, event: string) {
-    // depends on sessioning and/or posting
-    // creates a notification for an event eg posting
+  async createNotification(session: SessionDoc, notifyAbout: string, notificationTime: Date) {
+    const user = Sessioning.getUser(session);
+    const notification = await Notification.createNotification(user, notifyAbout, notificationTime);
+    return { msg: "Notification created successfully", notification };
   }
 
-  @Router.get("/notifications/pending")
-  async getPendingNotifications(session: SessionDoc) {
-    // depends on sessioning
+  @Router.get("/notifications/deliver")
+  async deliverNotifications() {
+    const result = await Notification.deliverPendingNotifications();
+    return result;
+  }
+
+  @Router.delete("/notifications/:id")
+  async deleteNotification(id: string) {
+    const notificationOid = new ObjectId(id);
+    const result = await Notification.deleteNotification(notificationOid);
+    return result;
   }
 
   @Router.get("/notifications/delivered")
-  async getDeliveredNotifications(session: SessionDoc) {
-    // depends on sessioning
+  async getDeliveredNotifications() {
+    const delivered = await Notification.getDeliveredNotifications();
+    return { deliveredNotifications: delivered };
   }
 
-  @Router.delete("/notifications/pending")
-  async removePendingNotifications(session: SessionDoc) {
-    // depends on sessioning
+  @Router.get("/notifications/pending")
+  async getPendingNotifications() {
+    const pending = await Notification.getPendingNotiifications();
+    return { pendingNotifications: pending };
   }
 
-  @Router.post("/moderation/flag")
-  async flagItem(itemId: string, reason: string) {
-    // flag items internally
+  @Router.get("/posts/content/:id")
+  async getPostContent(id: string) {
+    const itemOid = new ObjectId(id);
+    const content = await Posting.getPostContent(itemOid);
+    return { content: content };
   }
 
-  @Router.get("/moderation/pending")
-  async getPendingReviewItems() {}
-
-  @Router.post("/moderation/approve")
-  async approveItem(itemId: string) {
-    // flag items internally
+  @Router.post("/report")
+  async flagPosts(session: SessionDoc, itemId: string, flaggingReason: string) {
+    const user = Sessioning.getUser(session);
+    const itemOid = new ObjectId(itemId);
+    const content = (await Posting.getPostContent(itemOid)) || "";
+    const result = await Reporting.flagItem(itemOid, user, content, flaggingReason);
+    return { msg: "Item flagged for review", report: result };
   }
 
+  @Router.get("/report/reviews")
+  async reviewPosts() {
+    await Reporting.reviewFlaggedItems();
+    const reviewedItems = await Reporting.getReviewedItems();
+    for (const item of reviewedItems) {
+      if (item.reviewOutcome === "remove") {
+        await Posting.delete(item.item);
+      }
+    }
+    return { msg: "Flagged items reviewed and actions taken accordingly." };
+  }
 
+  // @Router.post("/report/:id/review")
+  // async reviewItem(id: string) {
+  //   const itemOid = new ObjectId(id);
+  //   const result = await Reporting.reviewItem(itemOid);
+  //   return { msg: "Item reviewed", outcome: result.outcome };
+  // }
+
+  // // routes for remaining concepts(still being reviewed and redesigned)
+  // @Router.post("/notifications")
+  // async createNotification(session: SessionDoc, time: number, event: string) {
+  //   // depends on sessioning and/or posting
+  //   // creates a notification for an event eg posting
+  // }
+
+  // @Router.get("/notifications/pending")
+  // async getPendingNotifications(session: SessionDoc) {
+  //   // depends on sessioning
+  // }
+
+  // @Router.get("/notifications/delivered")
+  // async getDeliveredNotifications(session: SessionDoc) {
+  //   // depends on sessioning
+  // }
+
+  // @Router.delete("/notifications/pending")
+  // async removePendingNotifications(session: SessionDoc) {
+  //   // depends on sessioning
+  // }
+
+  // @Router.post("/moderation/flag")
+  // async flagItem(itemId: string, reason: string) {
+  //   // flag items internally
+  // }
+
+  // @Router.get("/moderation/pending")
+  // async getPendingReviewItems() {}
+
+  // @Router.post("/moderation/approve")
+  // async approveItem(itemId: string) {
+  //   // flag items internally
+  // }
 }
 
 /** The web app. */

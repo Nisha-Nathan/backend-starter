@@ -136,6 +136,43 @@ const operations: Operation[] = [
     method: "GET",
     fields: { id: "input" },
   },
+
+  {
+    name: "Report a post",
+    endpoint: "api/report",
+    method: "POST",
+    fields: { postId: "input", flaggingReason: "input" },
+  },
+
+  {
+    name: "Schedule a notification",
+    endpoint: "api/notifications",
+    method: "POST",
+    fields: { notifyAbout: "input", notificationTime: "input" },
+  },
+
+  {
+    name: "Delete a notification",
+    endpoint: "api/notifications/:id",
+    method: "DELETE",
+    fields: { id: "input" },
+  },
+
+  {
+    name: "Get delivered notifications",
+    endpoint: "api//notifications/delivered",
+    method: "GET",
+    fields: {},
+  },
+
+  {
+    name: "Get pending notifications",
+    endpoint: "api//notifications/pending",
+    method: "GET",
+    fields: {},
+  },
+
+
   //
   // ...
   //
